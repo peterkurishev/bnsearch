@@ -2,4 +2,23 @@
 {% block title_extra %}Главная страница{% endblock %}
 
 {% block content %}
+<form method="post" action="">
+  {% csrf_token %}
+  Количество комнат от {{form.rooms_from}} и до {{form.rooms_to}}<br />
+  Стоимость от {{ form.price_from }} и до {{ form.price_to }}<br />
+  Рядом со станциями метро:<br />
+  {{form.metro_stations}}
+  <div class="cleaner" />
+  <input type="submit" name="submit" value="Поиск">
+</form>
+<hr />
+<div id="results" />
+{% if flats %}
+{% for flat in flats %}
+{% empty %}
+Квартир не найдено!
+{% endfor %}
+{% else %}
+Квартир не найдено!
+{% endif %}
 {% endblock %}

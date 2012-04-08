@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from bnsearch.views import SearchView
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -6,7 +7,7 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', 'bnsearch.views.home', name='home'),
+    url(r'^$', SearchView.as_view(success_url="/"), name='home'),
     # url(r'^bnsearch/', include('bnsearch.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

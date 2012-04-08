@@ -1,0 +1,18 @@
+ul {
+    list-style-type:none;
+    width:1000px;
+}
+
+li {
+    float:left;
+    margin: 10px 0 0 0;
+    padding: 0 10px 0 0;
+    width:199px;
+}
+
+div.cleaner {
+    clear: both;
+    float: none;
+    height: 0;
+    line-height: 0;
+}
