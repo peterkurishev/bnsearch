@@ -4,7 +4,6 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from bn.utils import bn
 
-
 class SearchView(FormView):
     template_name = 'index.html'
     form_class = SearchForm

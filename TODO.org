@@ -54,6 +54,10 @@ http://www.bn.ru/zap_fl.phtml
 Запрос:
 http://www.bn.ru/zap_fl.phtml?kkv1=1&kkv2=2&price1=2000&price2=3000&so1=&so2=&sk1=&sk2=&type[]=1&sorttype=0&sort_ord=0&metro[]=86&text=
 
+Достаточный запрос:
+
+http://www.bn.ru/zap_fl.phtml?kkv1=1&kkv2=2&price1=2000&price2=3000&metro[]=118&metro[]=84
+
 kkv_1=1
 kkv_2=2
 price1=2000
@@ -61,3 +65,4 @@ price2=3000
 metro[]=118&metro[]=84
 
 *** TODO Ajax вывод 
+    
