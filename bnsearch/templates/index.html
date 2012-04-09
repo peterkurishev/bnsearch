@@ -1,19 +1,24 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% load static %}
 {% load startswith %}
 {% block title_extra %}Главная страница{% endblock %}
 
 {% block content %}
-<form method="post" action="">
+<form method="post" action="" id="searchform">
   {% csrf_token %}
+  <script language="javascript">
+    $token = '{{csrf_token}}'
+  </script>
   Количество комнат от {{form.rooms_from}} и до {{form.rooms_to}}<br />
   Стоимость от {{ form.price_from }} и до {{ form.price_to }}<br />
   Рядом со станциями метро:<br />
   {{form.metro_stations}}
   <div class="cleaner"></div>
-  <input type="submit" name="submit" value="Поиск">
+  <input type="hidden" name="fmt" value="html" />
+  <input type="submit" name="submit" value="Поиск" id="submit">
+  <div class="invisible" id="spinner"><img src="{% get_static_prefix %}img/spinner.gif" /></div>
 </form>
 <hr />
-<div id="results" />
+<div id="results">
 {% if flats %}
 <table border="1">
 <tr>
@@ -38,6 +43,7 @@
 {% endfor %}
 </table>
 {% else %}
-Квартир не найдено!
+Поиск не производился!
 {% endif %}
 {% endblock %}
+</div>

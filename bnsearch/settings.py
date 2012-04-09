@@ -160,4 +160,7 @@ GET_METRO_URL = "http://www.bn.ru/zap_fl_w.phtml"
 GET_FLATS_URL = "http://www.bn.ru/zap_fl.phtml"
 SITE_ROOT = "http://www.bn.ru"
 USER_AGENT = 'Mozilla/5.0'
+
+FLAT_LINKS_XPATH = '//table[@class="results"]/tr/td/a[starts-with(@href,"/detail/")]/@href'
+DETAIL_CELLS_XPATH = '//div[@class="kvart_left"]/descendant::table/tr/td'
 #BE_POLITE = True # TODO: Be polite according to robots.txt

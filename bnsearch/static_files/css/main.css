@@ -20,3 +20,11 @@ div.cleaner {
 td {
     vertical-align: top;
 }
+
+div#spinner.invisible {
+    visibility: hidden;
+}
+
+div#spinner.visible {
+    visibility: block;
+}

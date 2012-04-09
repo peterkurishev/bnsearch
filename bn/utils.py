@@ -5,7 +5,6 @@ import urllib2
 import lxml.html
 import types
 import re
-from bn.dataprocessors import ProcReturnAsString, ProcReturnAsInteger
 
 PARAM_MAP = {
     'price_from': 'price1',
@@ -14,11 +13,6 @@ PARAM_MAP = {
     'rooms_to': 'kkv_2',
     'metro_stations': 'metro',
     }
-
-DETAILS_MAP = {
-    u'Адрес:': ['address', ProcReturnAsString],
-    u'Комнат:': ['rooms_number', ProcReturnAsInteger],
-}
 
 PRINT_PARAMS = [ u'Издание',
                  u'Комнат',
@@ -61,16 +55,14 @@ class BN(object):
         квартире. Возвращает словарь название параметра (как на
         странице) -> значение
         '''
-        contact = link.getparent().getparent().getparent().xpath('td[last()-1]/text()')[0]
         url = settings.SITE_ROOT+link
 
         html = self.__get_url__(url)
         xhtml = lxml.html.fromstring(html.read())
 
-        cells = xhtml.xpath('//div[@class="kvart_left"]/descendant::table/tr/td')
+        cells = xhtml.xpath(settings.DETAIL_CELLS_XPATH)
 
         result = dict()
-        result[u'Контакт'] = contact
         result[u'URL'] = url
 
         for i in range(len(cells)/2):
@@ -80,7 +72,6 @@ class BN(object):
             name = name.strip()
             if name in PRINT_PARAMS:
                 result[name] = value
-        print result
         return result
 
     def get_metro_stations(self):
@@ -107,6 +98,7 @@ class BN(object):
         FIXME: рефакторинг
         '''
         url = settings.GET_FLATS_URL
+
         for key in query:
             value = query[key]
             if type(value) is types.NoneType:
@@ -117,20 +109,25 @@ class BN(object):
             elif type(value) is int:
                 url += '&'+PARAM_MAP[key]+'='+str(value)
             else:
-                print key
-                print type(value)
                 continue
-                # raise Exception('Not a correct value type in query: %s' % str(type(value)))
         url = url.replace('&', '?', 1)
 
         html = lxml.html.fromstring(self.__get_url__(url).read())
-        flat_links = html.xpath('//table[@class="results"]/tr/td/a[starts-with(@href,"/detail/")]/@href')
+        flat_links = html.xpath(settings.FLAT_LINKS_XPATH)
 
         flats = []
 
         for flat_link in flat_links:
             flat = models.Flat()
+            contact = ''
+            try:
+                contact = flat_link.getparent().getparent().getparent().xpath('td[last()-1]/text()')[0]
+            except IndexError:
+                pass
             params = self.__get_flat_details__(flat_link)
+
+            params[u'Контакт'] = contact
+
             my_flat = []
             
             for param in PRINT_PARAMS:
