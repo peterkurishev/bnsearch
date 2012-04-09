@@ -16,7 +16,7 @@ class SearchView(FormView):
             form = self.get_form(form_class)
             if form.is_valid():
                 (flats, header) = bn.get_flats(form.cleaned_data)
-                return http.HttpResponse(json.dumps((header, flats)),
+                return http.HttpResponse(json.dumps((header, map(unicode,flats))),
                                          content_type='application/json')
                 return super(SearchView, self).post(request)
         else:
@@ -24,8 +24,4 @@ class SearchView(FormView):
 
     def form_valid(self, form):
         (flats, header) = bn.get_flats(form.cleaned_data)
-        return self.render_to_response(self.get_context_data(form=form, flats=flats, header=header))
-
-class GetMetroStationsMixin():
-    pass
-
+        return self.render_to_response(self.get_context_data(form=form, flats=flats, header = header))

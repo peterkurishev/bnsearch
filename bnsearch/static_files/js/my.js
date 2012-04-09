@@ -13,13 +13,8 @@ function populateResults(data) {
 	table = table.concat(data[0].join("</th><th>"));
 	table = table.concat("</th></tr>");
 	
+	table = table.concat(data[1].join(" "))
 	
-	for (var i=0, l=data[1].length; i<l;i++) {
-	    html_line = "<tr><td>";
-	    html_line = html_line.concat(data[1][i].join('</td><td>'));
-	    html_line = html_line.concat("</td></tr>");
-	    table = table.concat(html_line);
-	}
 	table = table.concat('</table>');
     
 	$('#results').html(table);

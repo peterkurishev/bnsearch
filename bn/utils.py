@@ -49,7 +49,7 @@ class BN(object):
         except:
             return ' '
 
-    def __get_flat_details__(self, link):
+    def __get_flat_details__(self, link, flat_params):
         '''
         Функция получает url страницы с информацией о
         квартире. Возвращает словарь название параметра (как на
@@ -70,7 +70,7 @@ class BN(object):
             name = cells.pop().text_content()
             name = re.sub(':', '', name)
             name = name.strip()
-            if name in PRINT_PARAMS:
+            if name in flat_params:
                 result[name] = value
         return result
 
@@ -115,27 +115,34 @@ class BN(object):
         html = lxml.html.fromstring(self.__get_url__(url).read())
         flat_links = html.xpath(settings.FLAT_LINKS_XPATH)
 
+        flat_params = []
+        
+        for field in models.Flat._meta.fields:
+            if field.name != 'id':
+                flat_params.append(field.verbose_name)
+
         flats = []
 
         for flat_link in flat_links:
             flat = models.Flat()
+
             contact = ''
             try:
                 contact = flat_link.getparent().getparent().getparent().xpath('td[last()-1]/text()')[0]
             except IndexError:
                 pass
-            params = self.__get_flat_details__(flat_link)
+            params = self.__get_flat_details__(flat_link, flat_params)
 
             params[u'Контакт'] = contact
 
-            my_flat = []
+            for field in flat._meta.fields:
+                if field.name != 'id':
+                    setattr(flat, field.name, self.__get_value_or_null__(params, field.verbose_name))
             
-            for param in PRINT_PARAMS:
-                my_flat.append(self.__get_value_or_null__(params, param))
-            
-            flats.append(my_flat)
+            print flat
+            flats.append(flat)
             
 
-        return (flats, PRINT_PARAMS)
+        return (flats, flat_params)
 
 bn = BN()

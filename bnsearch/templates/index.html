@@ -24,20 +24,12 @@
 <tr>
 {% for th in header %}
 <th>
-  {{ th }} 
+  {{ th|safe }} 
 </th>
 {% endfor %}
 </tr>
 {% for flat in flats %}
-<tr>
-  {% for val in flat %}
-  {% if val|startswith:'http' %}
-  <td><a href="{{ val }}">ссылка</a></td>
-  {% else %}
-  <td>{{ val }}</td>
-  {% endif %}
-  {% endfor %}
-</tr>
+{{ flat|safe }}
 {% empty %}
 Квартир не найдено!
 {% endfor %}

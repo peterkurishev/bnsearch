@@ -6,7 +6,6 @@ from bn.utils import bn
 class MetroStationManager(models.Manager):
     def get_query_set(self):
         if super(MetroStationManager, self).get_query_set().count() == 0:
-            # get objects from page here
             stations = bn.get_metro_stations()
             for station in stations:
                 station.save()
@@ -24,52 +23,28 @@ class MetroStation(models.Model):
     def __unicode__(self):
         return self.name
 
-class HouseType(models.Model):
-    name = models.CharField(max_length=16)
-
-class Subject(models.Model):
-    name = models.CharField(max_length=128)
-
-class Edition(models.Model):
-    name = models.CharField(max_length=128)
-
 class Flat(models.Model):
-    TOILET_TYPES = (
-        ('U', u"Неизвестно"),
-        ('A', u"Совмещенный"),
-        ('B', u"Раздельный"),
-        )
 
-    edition = models.ForeignKey(Edition)
-    rooms_number = models.IntegerField(u"Количество комнат")
+    edition = models.CharField(u"Издание", max_length=64)
+    rooms_number = models.CharField(u"Комнат", max_length=3)
     address = models.CharField(u"Адрес", max_length=256)
-    metro_station = models.ForeignKey(MetroStation)
-    level = models.IntegerField(u"Этаж")
-    house_type = models.ForeignKey(HouseType)
-    whole_s2 = models.FloatField(u"Общая площадь")
-    living_s2 = models.FloatField(u"Жилая площадь")
-    kitchen_s2 = models.FloatField(u"Площадь кухни")
+    metro_station = models.CharField(u"Метро", max_length=32)
+    level = models.CharField(u"Этаж/ Этажность", max_length=16)
+    house_type = models.CharField(u"Тип дома", max_length=32)
+    whole_s2 = models.CharField(u"Общая пл. (м2)", max_length=5)
+    living_s2 = models.CharField(u"Жилая пл. (м2)", max_length=5)
+    kitchen_s2 = models.CharField(u"Пл. кухни (м2)", max_length=5)
     phone = models.CharField(u"Телефон", max_length=16)
-    toilet = models.CharField(u"Санузел", max_length=2, choices = TOILET_TYPES)
-    subject = models.ForeignKey(Subject)
+    toilet = models.CharField(u"Санузел", max_length=16)
+    subject = models.CharField(u'Субъект', max_length=128)
     kontact = models.CharField(u"Контакт", max_length = 64)
-    additional = models.CharField(u"Дополнительная информация", max_length=256)
+    additional = models.CharField(u"Дополнительно", max_length=256)
+    url = models.CharField(u'URL', max_length=1024)
 
-    # def save_with_dicts(self, house_type_name, subject_name, edition, metro):
-    #     ht_id = 0
-    #     try:
-    #         ht_id = HouseType.objects.get(name=house_type_name)
-    #     except:
-    #         ht = HouseType(name=house_type_name)
-    #         ht_id = ht.save()
-
-    #     try:
-    #         subject_id = Subject.objects.get(name=subject_name)
-    #     except:
-    #         ht = HouseType(name=house_type_name)
-    #         ht_id = ht.save()
-    #     try:
-    #         ht_id = HouseType.objects.get(name=house_type_name)
-    #     except:
-    #         ht = HouseType(name=house_type_name)
-    #         ht_id = ht.save()
+    def __unicode__(self):
+        string = u'<tr>'
+        for field in self._meta.fields:
+            if field.name != 'id':
+                string += u'<td>%s</td>' % (getattr(self, field.name),)
+        string += u'</tr>'
+        return string
