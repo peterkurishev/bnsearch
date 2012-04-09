@@ -139,7 +139,6 @@ class BN(object):
                 if field.name != 'id':
                     setattr(flat, field.name, self.__get_value_or_null__(params, field.verbose_name))
             
-            print flat
             flats.append(flat)
             
 
