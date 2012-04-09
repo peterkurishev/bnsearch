@@ -164,3 +164,4 @@ USER_AGENT = 'Mozilla/5.0'
 FLAT_LINKS_XPATH = '//table[@class="results"]/tr/td/a[starts-with(@href,"/detail/")]/@href'
 DETAIL_CELLS_XPATH = '//div[@class="kvart_left"]/descendant::table/tr/td'
 #BE_POLITE = True # TODO: Be polite according to robots.txt
+GET_FLATS_URL_2 = 'http://www.bn.ru/zap_fl.phtml?kkv1=%s&kkv2=%s&price1=%s&price2=%s&so1=&so2=&sk1=&sk2=&type%%5B%%5D=1&sorttype=0&sort_ord=0%s&text='

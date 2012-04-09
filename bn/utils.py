@@ -43,12 +43,6 @@ class BN(object):
         opener = self.__prepare_opener__()
         return opener.open(url)
 
-    def __get_value_or_null__(self, mdict, key):
-        try:
-            return mdict[key]
-        except:
-            return ' '
-
     def __get_flat_details__(self, link, flat_params):
         '''
         Функция получает url страницы с информацией о
@@ -96,21 +90,37 @@ class BN(object):
         '''
         Ужасно длинная функция, которая возвращает квартиры.
         FIXME: рефакторинг
-        '''
-        url = settings.GET_FLATS_URL
 
-        for key in query:
-            value = query[key]
-            if type(value) is types.NoneType:
-                continue
-            elif str(type(value)) == "<class 'django.db.models.query.QuerySet'>":
-                for station in value:
-                    url += '&'+PARAM_MAP[key]+'[]='+str(station.bn_id)
-            elif type(value) is int:
-                url += '&'+PARAM_MAP[key]+'='+str(value)
-            else:
-                continue
-        url = url.replace('&', '?', 1)
+        '''
+
+        stations = ''
+        for station in query['metro_stations']:
+            stations += '&metro%5B%5D='+str(station.bn_id)
+
+        xstr = lambda s: s or ""
+
+        url = settings.GET_FLATS_URL_2 % (
+            xstr(query['rooms_from']),
+            xstr(query['rooms_to']),
+            xstr(query['price_from']),
+            xstr(query['price_to']),
+            xstr(stations),
+            )
+        
+        # for key in query:
+        #     value = query[key]
+        #     if type(value) is types.NoneType:
+        #         continue
+        #     elif str(type(value)) == "<class 'django.db.models.query.QuerySet'>":
+        #         for station in value:
+        #             url += '&'+PARAM_MAP[key]+'%5B%5D='+str(station.bn_id)
+        #     elif type(value) is int:
+        #         url += '&'+PARAM_MAP[key]+'='+str(value)
+        #     else:
+        #         continue
+        # url = url.replace('&', '?', 1)
+
+        print url
 
         html = lxml.html.fromstring(self.__get_url__(url).read())
         flat_links = html.xpath(settings.FLAT_LINKS_XPATH)
@@ -135,9 +145,11 @@ class BN(object):
 
             params[u'Контакт'] = contact
 
-            for field in flat._meta.fields:
-                if field.name != 'id':
-                    setattr(flat, field.name, self.__get_value_or_null__(params, field.verbose_name))
+            for param in params:
+                for field in flat._meta.fields:
+                    if param == field.verbose_name:
+                        setattr(flat, field.name, params[param])
+    
             
             flats.append(flat)
             
