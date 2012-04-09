@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load startswith %}
 {% block title_extra %}Главная страница{% endblock %}
 
 {% block content %}
@@ -8,16 +9,34 @@
   Стоимость от {{ form.price_from }} и до {{ form.price_to }}<br />
   Рядом со станциями метро:<br />
   {{form.metro_stations}}
-  <div class="cleaner" />
+  <div class="cleaner"></div>
   <input type="submit" name="submit" value="Поиск">
 </form>
 <hr />
 <div id="results" />
 {% if flats %}
+<table border="1">
+<tr>
+{% for th in header %}
+<th>
+  {{ th }} 
+</th>
+{% endfor %}
+</tr>
 {% for flat in flats %}
+<tr>
+  {% for val in flat %}
+  {% if val|startswith:'http' %}
+  <td><a href="{{ val }}">ссылка</a></td>
+  {% else %}
+  <td>{{ val }}</td>
+  {% endif %}
+  {% endfor %}
+</tr>
 {% empty %}
 Квартир не найдено!
 {% endfor %}
+</table>
 {% else %}
 Квартир не найдено!
 {% endif %}

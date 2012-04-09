@@ -158,4 +158,6 @@ LOGGING = {
 
 GET_METRO_URL = "http://www.bn.ru/zap_fl_w.phtml"
 GET_FLATS_URL = "http://www.bn.ru/zap_fl.phtml"
+SITE_ROOT = "http://www.bn.ru"
 USER_AGENT = 'Mozilla/5.0'
+#BE_POLITE = True # TODO: Be polite according to robots.txt

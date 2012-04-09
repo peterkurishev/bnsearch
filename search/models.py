@@ -8,4 +8,5 @@ class SearchCache(models.Model):
     price_from = models.IntegerField(u"Цена от:", blank=True, null=True)
     price_to = models.IntegerField(u"до", blank=True, null=True)
     metro_stations = models.ManyToManyField(bnmodels.MetroStation, blank=True, null=True)
+    flats = models.ManyToManyField(bnmodels.Flat, blank=True, null=True, editable=False)
     search_time = models.DateTimeField(editable=False, auto_now=True)
